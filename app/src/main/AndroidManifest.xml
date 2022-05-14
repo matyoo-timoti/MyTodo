@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.asterisk.mytodo">
 
     <application
@@ -24,9 +25,9 @@
 
         <provider
             android:name="com.asterisk.mytodo.ToDoProvider"
-            android:authorities="com.asterisk.myToDo"
-            android:exported="false"
-            android:multiprocess="true">
+            android:authorities="com.asterisk.mytodo.PROVIDER"
+            android:multiprocess="true"
+            tools:ignore="ExportedContentProvider">
         </provider>
     </application>
 

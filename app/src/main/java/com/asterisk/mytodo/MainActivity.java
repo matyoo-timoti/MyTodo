@@ -1,7 +1,7 @@
 package com.asterisk.mytodo;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -26,7 +25,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ToDoDbHelper dbHelper;
-    ArrayList<ToDoModel> allTasks;
+    ArrayList<ToDoModel> list;
+
+    ToDoAdapter toDoAdapter;
     TextView txtViewEmptyList;
 
     @Override
@@ -34,27 +35,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set Light mode as default
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         // Continue drawing the main activity views.
-        RecyclerView bookListView = findViewById(R.id.taskListView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        bookListView.setLayoutManager(linearLayoutManager);
-        bookListView.setHasFixedSize(true);
+        RecyclerView recyclerView = findViewById(R.id.taskListView);
+        recyclerView.setHasFixedSize(true);
 
         dbHelper = new ToDoDbHelper(this);
-        allTasks = dbHelper.listOfTasks();
+        list = dbHelper.listOfTasks();
+
+        toDoAdapter = new ToDoAdapter(this, list);
+        recyclerView.setAdapter(toDoAdapter);
+
         txtViewEmptyList = findViewById(R.id.textViewNoItem);
-
-        ToDoAdapter bkAdapter = new ToDoAdapter(this, allTasks);
-        bookListView.setAdapter(bkAdapter);
-
-        if (allTasks.size() > 0) {
+        if (list.size() > 0) {
             txtViewEmptyList.setVisibility(View.GONE);
-            bookListView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
         } else {
             txtViewEmptyList.setVisibility(View.VISIBLE);
-            bookListView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
         }
 
         // Floating button on click
@@ -70,11 +70,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Menu buttons
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         dbHelper.deleteAll();
         Toast.makeText(MainActivity.this, "All books have been deleted", Toast.LENGTH_LONG).show();
         finish();
+        toDoAdapter.notifyDataSetChanged();
         startActivity(getIntent());
         return true;
     }
@@ -111,10 +113,11 @@ public class MainActivity extends AppCompatActivity {
                 /* Insert task using provider */
                 try {
                     ContentValues values = getValues(newTask.getTask(), newTask.getStatus());
-                    Uri uri = getContentResolver().insert(ToDoProvider.CONTENT_URI, values);
-                }catch (Exception ex) {
+                    getContentResolver().insert(ToDoProvider.CONTENT_URI, values);
+                } catch (Exception ex) {
                     Log.e("Insert", ex.toString());
                 }
+
                 Toast.makeText(this, "New task added", Toast.LENGTH_LONG).show();
                 dialog.dismiss();
                 finish();

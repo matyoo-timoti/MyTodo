@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import java.util.Objects;
 
 public class ToDoProvider extends ContentProvider {
-    static final String PROVIDER_NAME = "com.asterisk.myToDo"; //Provider name
+    static final String PROVIDER_NAME = "com.asterisk.mytodo.PROVIDER"; //Provider authority
     static final String URL = "content://" + PROVIDER_NAME + "/todo"; //Provider URL
     public static final Uri CONTENT_URI = Uri.parse(URL); //Content URL in URI format
 

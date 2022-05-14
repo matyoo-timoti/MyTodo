@@ -23,14 +23,11 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
 
     private final Context context;
     private final ArrayList<ToDoModel> listOfTasks;
-    private final ToDoDbHelper database;
 
     ToDoAdapter(Context context, ArrayList<ToDoModel> listOfTasks) {
         this.context = context;
         this.listOfTasks = listOfTasks;
-        database = new ToDoDbHelper(context);
     }
-
 
     @NonNull
     @Override
@@ -63,10 +60,16 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
         });
 
         // Listener for edit button
-        holder.btnEdit.setOnClickListener(view -> editBookDialog(toDoModel));
+        holder.btnEdit.setOnClickListener(view -> {
+            editBookDialog(toDoModel);
+            notifyItemChanged(position);
+        });
 
         // Listener for delete button
-        holder.btnDelete.setOnClickListener(view -> deleteTask(toDoModel.getId()));
+        holder.btnDelete.setOnClickListener(view -> {
+            deleteTask(toDoModel.getId());
+            notifyItemChanged(position);
+        });
     }
 
     private void editBookDialog(ToDoModel toDoModel) {
