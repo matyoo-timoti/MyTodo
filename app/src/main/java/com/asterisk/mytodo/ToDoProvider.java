@@ -1,5 +1,6 @@
 package com.asterisk.mytodo;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -11,14 +12,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ToDoProvider extends ContentProvider {
     static final String PROVIDER_NAME = "com.asterisk.mytodo.PROVIDER"; //Provider authority
-    static final String URL = "content://" + PROVIDER_NAME + "/todo"; //Provider URL
+    static final String BASE_PATH = "todo";
+    static final String URL = "content://" + PROVIDER_NAME + "/" + BASE_PATH; //Provider URL
     public static final Uri CONTENT_URI = Uri.parse(URL); //Content URL in URI format
 
     //Database column ID
@@ -127,4 +131,6 @@ public class ToDoProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
+
+
 }

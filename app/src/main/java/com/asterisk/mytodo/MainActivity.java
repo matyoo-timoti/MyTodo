@@ -2,6 +2,8 @@ package com.asterisk.mytodo;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -43,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         dbHelper = new ToDoDbHelper(this);
-        list = dbHelper.listOfTasks();
+//        list = dbHelper.listOfTasks();
+        list = fetchTasks();
 
         toDoAdapter = new ToDoAdapter(this, list);
         recyclerView.setAdapter(toDoAdapter);
@@ -131,5 +135,28 @@ public class MainActivity extends AppCompatActivity {
         values.put(ToDoDbHelper.COLUMN_TASK, task);
         values.put(ToDoDbHelper.COLUMN_STAT, status);
         return values;
+    }
+
+    @SuppressLint("Recycle")
+    public ArrayList<ToDoModel> fetchTasks() {
+        ArrayList<ToDoModel> listOfTasks = new ArrayList<>();
+
+        Uri allTasks = Uri.parse("content://com.asterisk.mytodo.PROVIDER/todo");
+        Cursor cursor;
+        //---Honeycomb and later---
+        CursorLoader cursorLoader = new CursorLoader(this,allTasks,null, null, null,null);
+        cursor = cursorLoader.loadInBackground();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                @SuppressLint("Range") String task = cursor.getString(cursor.getColumnIndex("task"));
+                @SuppressLint("Range") int status = cursor.getInt(cursor.getColumnIndex("status"));
+                listOfTasks.add(new ToDoModel(id, task, status));
+            }
+        } else {
+            Toast.makeText(this,"Null", Toast.LENGTH_LONG).show();
+        }
+        return listOfTasks;
     }
 }

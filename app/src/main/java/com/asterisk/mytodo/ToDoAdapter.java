@@ -107,7 +107,7 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
                 ToDoModel newTodo = new ToDoModel(toDoModel.getId(), newTask, toDoModel.getStatus());
 //                database.updateTask(new ToDoModel(toDoModel.getId(), newTask, toDoModel.getStatus()));
 
-                /* Update using provider */
+                // Update using provider
                 ContentValues newValues = new ContentValues();
                 newValues.put(ToDoDbHelper.COLUMN_ID, newTodo.getId());
                 newValues.put(ToDoDbHelper.COLUMN_TASK, newTodo.getTask());

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.asterisk.mytodo">
 
+    <permission android:name="com.asterisk.mytodo.PROVIDER_READ"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,11 +26,18 @@
         </activity>
 
         <provider
-            android:name="com.asterisk.mytodo.ToDoProvider"
+            android:name=".ToDoProvider"
             android:authorities="com.asterisk.mytodo.PROVIDER"
             android:multiprocess="true"
+            android:exported="false"
+            android:readPermission="com.asterisk.mytodo.PROVIDER_READ"
             tools:ignore="ExportedContentProvider">
         </provider>
     </application>
+
+    <queries
+        android:name=".ToDoProvider">
+    </queries>
+
 
 </manifest>
