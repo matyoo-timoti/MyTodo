@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.asterisk.mytodo">
-
-    <permission android:name="com.asterisk.mytodo.PROVIDER_READ"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTodo">
+        <provider
+            android:name="com.asterisk.mytodo.ToDoProvider"
+            android:authorities="com.asterisk.mytodo.PROVIDER"
+            android:readPermission="com.asterisk.mytodo.PROVIDER_READ"
+            android:exported="true">
+        </provider>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -24,15 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <provider
-            android:name=".ToDoProvider"
-            android:authorities="com.asterisk.mytodo.PROVIDER"
-            android:multiprocess="true"
-            android:exported="false"
-            android:readPermission="com.asterisk.mytodo.PROVIDER_READ"
-            tools:ignore="ExportedContentProvider">
-        </provider>
     </application>
 
     <queries
